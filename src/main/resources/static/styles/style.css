@@ -1,0 +1,293 @@
+/* Редакция от 09.06.2024 */
+/* Редакция от 24.02.2010 */
+
+body, html {
+	margin: 0px;
+	padding: 0px;
+	border: none;
+	outline-style: none;
+	text-align: center;
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+.active {
+	color: #9999FF;
+}
+
+p {
+	font-size: 12px;
+	font-weight: normal;
+}
+
+p.text {
+/*	text-indent: 2em; */
+}
+span.underlined_text {
+	text-decoration: underline;
+}
+
+span.red_text {
+	color: #FF0066;
+}
+
+a { /* установка малинового цвета для всех гиперссылок */
+	font-size: 12px;
+	font-weight: normal;
+	color: #FF0066;
+}
+
+li {
+	font-size: 12px;
+	font-weight: normal;
+}
+
+h1 {
+	font-size: 21px;
+	color: #0000CD;
+}
+h2 {
+	font-size: 16px;
+}
+h3 {
+	font-size: 12px;
+}
+
+#container{
+margin: 0 auto; /*обнуление полей и отступов, т.к. различные браузеры их по разному воспринимают. */
+text-align: left; /*Отменяем tex-align:center заданное в body. Делаем чтобы весь текст в макете выравнивался по левому краю */
+
+width: 100%;
+min-height: 100%;
+height: auto  !important;
+height: 100%;
+position: relative;
+
+min-width: 1037px; /*задаем минимальную ширину макета в современных браузерах */
+width: expression(  /*задаем минимальную ширину макета в старых версия браузера.*/
+(document.compatMode && document.compatMode == 'CSS1Compat')
+?
+(document.documentElement.clientWidth < 1037
+? "1037px" : "auto") : (document.body.clientWidth < 1037px
+? "1037px" : "auto"));}
+
+/*
+#logo {
+	margin: 0px;
+	padding: 0px;
+	height: 100px;
+	width: 105px;
+	vertical-align: top;
+	position: relative;
+	background-image:  url(images/logo.jpg);
+}
+*/
+
+/* Стили первого блока */
+#block1 {
+/*	background-color: #00FFFF; */
+		margin: 0px;
+    padding-left: 23px;
+    height: 85px;
+		width: 100%;
+		position: relative;
+		background-image:  url(../images/metal_background.jpg);
+		background-repeat: repeat-x;
+
+		font-size: 14px;
+		font-weight: bolder;
+}
+
+#block2 {
+//		background-color: #00FFFF;
+		margin-top: 55px;
+    padding-left: 13px;
+    padding-top: 0px;
+    height: 77px;
+		width: 100%;
+		position: relative;
+		vertical-align: bottom;
+
+		font-size: 14px;
+		font-weight: bolder;
+}
+
+/* Стили отдельных элементов*/
+#priceUpdate {
+  margin-top: 0px;
+	margin-right: 0px;
+	padding-top: 17px;
+	padding-left: 0px;
+
+	height: 77px;
+	width: 100%;
+
+	/*vertical-align: top;*/
+	font-weight: normal;
+}
+
+#updateButton {
+	margin-top: 23px;
+	margin-right: 0px;
+	padding-left: 0px;
+	/*padding-top: 12px;*/
+
+	height: 23px;
+	width: 65px;
+
+	/*vertical-align: top;*/
+	text-align: center;
+	font-size: 12px;
+	font-weight: normal;
+}
+
+#uploadForm {
+	margin-right: 0px;
+	padding-left: 0px;
+	padding-top: 12px;
+	font-size: 12px;
+	font-weight: normal;
+}
+
+#sndButton {
+	padding: 7px;
+	margin-top: 17px;
+	margin-left: 13px;
+	font-size: 12px;
+	font-weight: normal;
+	color: #4B0082;
+}
+
+span.normal_text {
+	font-size: 13px;
+	font-weight: normal;
+}
+
+span.menu_text {
+	font-size: 14px;
+	font-weight: bolder;
+}
+
+div.energy_calc {
+	display: inline-block;
+	vertical-align: top;
+
+	margin-left:30px;
+	margin-top: 30px;
+	padding: 23px;
+	height: 350px;
+	width: 433px;
+
+	border: medium solid;
+	border-color: #483D8B;
+	border-radius: 17px;
+
+	color: black;
+
+/*
+	text-align: left;
+	font-size: 23px;
+	font-style: normal;
+	font-weight: bold;
+	background-color: #99CCCC;
+	*/
+}
+
+div.peaks_list {
+	display: inline-block;
+	vertical-align: top;
+
+	margin-left:30px;
+	margin-top: 30px;
+	padding: 23px;
+	height: 1300px;
+	width: 433px;
+
+	border: medium solid;
+	border-color: #483D8B;
+	border-radius: 17px;
+
+	color: black;
+}
+
+div.normalText {
+	display: inline-block;
+    color: black;
+}
+
+div.errorText {
+	display: inline-block;
+    color: red;
+}
+
+span.normal_text {
+		color: #0057ad;
+    font-style: normal;
+    font-weight: normal;
+}
+
+#price_span {
+    font-weight: bolder;
+}
+
+div.dimensions {
+	display: inline-block;
+	position: relative;
+	vertical-align: top;
+	margin-bottom: 23px;
+
+	color: #7d7f7d;
+	/* background-color: #99CCCC; */
+}
+
+#tariff_input1 {
+	position: relative;
+	width: 77px;
+}
+
+#discount {
+	position: relative;
+	width: 77px;
+}
+
+#value_input1 {
+	position: relative;
+	width: 55px;
+}
+
+#value_input2 {
+	position: relative;
+	width: 33px;
+}
+
+div.item_card {
+	display: inline-block;
+	vertical-align: top;
+	margin-left:30px;
+    margin-top: 30px;
+    height: 453px;
+	width: 277px;
+	/* position: relative; */
+	top: 23px;
+	left: 23px;
+	background-color: #FFF6DD;
+	background-image:  url(images/item_card1.jpg);
+	background-repeat: repeat-x;
+	font-size: 17px;
+	font-weight: bolder;
+	text-align: center;
+}
+
+div.item_image {
+	margin-left: 58px;
+	margin-right: 58px;
+	width: 177px;
+	height: 172px;
+	position: relative;
+}
+
+div.item_name {
+	margin: 33px;
+	font-size: 21px;
+	text-align: center;
+	color: #000000;
+}

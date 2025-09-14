@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="content-type" content="text/html" charset="UTF-8">
+    <title>Main page</title>
+    <link href="styles/style.css" th:href="@{styles/style.css}" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<h1>AIG ER Reports Manager</h1>
+<h3>Version 1.0 - Beta</h3>
+<!-- Основной контейнер, включающий остальные DIV-->
+<div id="container">
+<!--  <div id="logo"></div> -->
+  <div id="block1">
+      <div id="priceUpdate">
+        <label for="updateButton">Обновить данные для расчета предельных уровней нерегулируемых цен </label>
+        <button type="submit" id="updateButton">Обновить</button>
+      </div>
+  </div>
+
+    <div class="peaks_list">
+      <h1>Данные для рассчета тарифа</h1>
+      <br>
+      <form th:action="@{/put-piks}" method="post"  id="form">
+      <div><b>Клин</b><br>
+        <span class="normal_text">Тариф на передачу электроэнергии на 1-ое полугодие</span>
+        <input type="number" th:value="${tariffs.firstHalf_Klin}" th:name="firstHalf_Klin" id="tariff_input1" step="0.00001"> </input> <br>
+        <p>Компоненты цены: сет.потери + сбыт. надбавка + инфраструктура</p>
+        <input type="number" th:value="${components.firstHalf_Klin_tsprt}" th:name="firstHalf_Klin_tsprt" id="value_input1" step="0.001"> </input>
+        <input type="number" th:value="${components.firstHalf_Klin_sp}" th:name="firstHalf_Klin_sp" id="value_input1" step="0.001"> </input>
+        <input type="number" th:value="${components.firstHalf_Klin_infra}" th:name="firstHalf_Klin_infra" id="value_input1" step="0.001"> </input>
+        <br>
+        <span class="normal_text">Одноставочный тариф на передачу электроэнергии на 1-ое полугодие:</span>
+        <input type="number" th:value="${tariffs.firstHalf_Klin_1st}" th:name="firstHalf_Klin_1st" id="tariff_input1" step="0.00001"> </input> <br>
+        <br>
+        <br>
+        <span class="normal_text">Тариф на передачу электроэнергии на 2-ое полугодие</span>
+        <input type="number" th:value="${tariffs.secondHalf_Klin}" th:name="secondHalf_Klin" id="tariff_input1" step="0.00001"> </input> <br>
+        <p>Компоненты цены: сет.потери + сбыт. надбавка + инфраструктура</p>
+        <input type="number" th:value="${components.secondHalf_Klin_tsprt}" th:name="secondHalf_Klin_tsprt" id="value_input1" step="0.001"> </input>
+        <input type="number" th:value="${components.secondHalf_Klin_sp}" th:name="secondHalf_Klin_sp" id="value_input1" step="0.001"> </input>
+        <input type="number" th:value="${components.secondHalf_Klin_infra}" th:name="secondHalf_Klin_infra" id="value_input1" step="0.001"> </input>
+        <br>
+        <span class="normal_text">Одноставочный тариф на передачу электроэнергии на 2-ое полугодие:</span>
+        <input type="number" th:value="${tariffs.secondHalf_Klin_1st}" th:name="secondHalf_Klin_1st" id="tariff_input1" step="0.00001"> </input> <br>
+      </div>
+      <br>
+      <br>
+      <div><b>Бор</b><br>
+          <span class="normal_text">Тариф на передачу электроэнергии на 1-ое полугодие</span>
+          <input type="number" th:value="${tariffs.firstHalf_Bor}" th:name="firstHalf_Bor" id="tariff_input1" step="0.00001"> </input> <br>
+          <p>Компоненты цены: сет.потери + сбыт. надбавка + инфраструктура</p>
+          <input type="number" th:value="${components.firstHalf_Bor_tsprt}" th:name="firstHalf_Bor_tsprt" id="value_input1" step="0.001"> </input>
+          <input type="number" th:value="${components.firstHalf_Bor_sp}" th:name="firstHalf_Bor_sp" id="value_input1" step="0.001"> </input>
+          <input type="number" th:value="${components.firstHalf_Bor_infra}" th:name="firstHalf_Bor_infra" id="value_input1" step="0.001"> </input>
+          <br>
+          <span class="normal_text">Одноставочный тариф на передачу электроэнергии на 1-ое полугодие:</span>
+          <input type="number" th:value="${tariffs.firstHalf_Bor_1st}" th:name="firstHalf_Bor_1st" id="tariff_input1" step="0.00001"> </input> <br>
+          <br>
+          <span class="normal_text">Тариф на передачу электроэнергии на 2-ое полугодие</span>
+          <input type="number" th:value="${tariffs.secondHalf_Bor}" th:name="secondHalf_Bor" id="tariff_input1" step="0.00001"> </input> <br>
+        <p>Компоненты цены: сет.потери + сбыт. надбавка + инфраструктура</p>
+        <input type="number" th:value="${components.secondHalf_Bor_tsprt}" th:name="secondHalf_Bor_tsprt" id="value_input1" step="0.001"> </input>
+        <input type="number" th:value="${components.secondHalf_Bor_sp}" th:name="secondHalf_Bor_sp" id="value_input1" step="0.001"> </input>
+        <input type="number" th:value="${components.secondHalf_Bor_infra}" th:name="secondHalf_Bor_infra" id="value_input1" step="0.001"> </input>
+        <br>
+        <span class="normal_text">Одноставочный тариф на передачу электроэнергии на 2-ое полугодие:</span>
+        <input type="number" th:value="${tariffs.secondHalf_Bor_1st}" th:name="secondHalf_Bor_1st" id="tariff_input1" step="0.00001"> </input> <br>
+      </div>
+      <br>
+      <br>
+      <b>Плановые часы пиковой нагрузки на 2025 год</b>
+      <br>
+      <br>
+      <div class="dimensions" th:each="p: ${piksList}">
+        <input type="number" th:value="${p.firstHourStart}" th:name="firstHourStart" id="value_input1"> </input>
+        <input type="number" th:value="${p.firstHourEnd}"  th:name="firstHourEnd" id="value_input1"> [[${p.month}]] </input>
+        <input type="number" th:value="${p.secondHourStart}" th:name="secondHourStart" id="value_input1"> </input>
+        <input type="number" th:value="${p.secondHourEnd}" th:name="secondHourEnd" id="value_input1"> </input> <br>
+
+      </div>
+          <br>
+      <button type="submit" id="loadPiks">Сохранить</button>
+      </form>
+
+    </div>
+</div>
+
+<script src="script1.js"></script>
+
+</body>
+</html>

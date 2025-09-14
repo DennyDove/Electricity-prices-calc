@@ -1,0 +1,74 @@
+spring:
+  config:
+    activate:
+      on-profile: postgres
+
+  servlet:
+    multipart:
+      max-file-size: 1280KB
+      max-request-size: 1280KB
+
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/energy1
+    username: postgres
+    password: root
+
+  jpa:
+    defer-datasource-initialization: true # выполнение скрипта data.sql после создания таблицы
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+        # Fix Postgres JPA Error (Method org.postgresql.jdbc.PgConnection.createClob() is not yet implemented).
+        temp:
+          use_jdbc_metadata_defaults: false
+        jdbc:
+          lob:
+            non_contextual_creation: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+
+  sql:
+    init:
+      continue-on-error: false
+      mode: never #always
+
+  #thymeleaf:
+  #  prefix-classpath: /static/
+
+logging:
+  level:
+    root: info
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: mysql
+
+  servlet:
+    multipart:
+      max-file-size: 1280KB
+      max-request-size: 1280KB
+
+  datasource:
+    driverClassName: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/enterprise
+    username: root
+    password: root
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQLDialect
+    hibernate:
+      ddl-auto: update
+
+logging:
+  level:
+    root: info

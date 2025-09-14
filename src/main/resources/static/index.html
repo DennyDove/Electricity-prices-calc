@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta http-equiv="content-type" content="text/html" charset="UTF-8">
+    <title>Main page</title>
+    <link href="styles/style.css" th:href="@{styles/style.css}" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<h1>AIG ER Reports Manager</h1>
+<h3>Version 1.0 - Beta</h3>
+<!-- Основной контейнер, включающий остальные DIV-->
+<div id="container">
+<!--  <div id="logo"></div> -->
+<div id="block1">
+    <div id="priceUpdate">
+      <a href="/update-menu"><span class="menu_text">Обновить данные для расчета предельных уровней нерегулируемых цен</span></a>
+      <br>
+      <br>
+      <a href="/data"><span class="menu_text">Параметры для расчета тарифа</span></a>
+    </div>
+</div>
+
+    <div class="energy_calc">
+      <h1>Рассчитать тариф по электроэнергии</h1>
+      <br>
+      <form th:action="@{/reports}" method="get" th:object="${documentDto}" id="form">
+
+        <div>
+          <input type="radio"
+                 id="Klin"
+                 th:field="*{plant}"
+                 th:value="Klin">
+          <label for="Klin">Клин</label>
+        </div>
+        <div>
+          <input type="radio"
+                 id="Bor"
+                 th:field="*{plant}"
+                 th:value="Bor">
+          <label for="Bor">Бор</label>
+        </div>
+        <br>
+        <label for="discount">Cкидка от сбытовой надбавки: </label>
+        <input type="number" id="discount" th:field="*{discount}" th:value="*{discount}"></input>
+        <br>
+        <br>
+        <label for="monthList">Начальный месяц:</label>
+        <select id="monthList" th:field="*{startPeriod}">
+          <option th:each="m : ${months}" th:value="${m}" th:text="${m.name}"></option>
+        </select>
+        <br>
+        <br>
+        <label for="monthList">Конечный месяц:</label>
+        <select id="monthList" th:field="*{endPeriod}">
+          <option th:each="m : ${months}" th:value="${m}" th:text="${m.name}"></option>
+        </select>
+        <br>
+        <br>
+        <br>
+      <button type="submit" id="sndButton">Рассчитать</button>
+      </form>
+
+  </div>
+</div>
+
+<!-- <script src="script1.js"></script> -->
+
+</body>
+</html>
