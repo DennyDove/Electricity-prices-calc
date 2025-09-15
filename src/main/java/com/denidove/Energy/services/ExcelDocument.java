@@ -1,6 +1,7 @@
 package com.denidove.Energy.services;
 
 import com.denidove.Energy.dto.DocumentDto;
+import com.denidove.Energy.utils.NumberUtils;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.hc.client5.http.ssl.NoopHostnameVerifier;
@@ -56,6 +57,7 @@ public class ExcelDocument {
     protected XSSFWorkbook xlsx;
 
     protected String plant;
+    protected int year;
     protected double discount;
 
     public HSSFWorkbook open(String xlsDoc)  {
@@ -102,18 +104,20 @@ public class ExcelDocument {
         File filePath = new File("c:/EnergyReports/"+ plant +"/downloads/pikHour");
         filePath.mkdirs();
 
-        if(plant.equals("Klin")) urlPlant = "_MOSENERG_46_calcfacthour";
-        //toDo
-        if(plant.equals("Bor")) urlPlant = "_NIGNOVEN_22_calcfacthour";
-
+        if(plant.equals("Klin")) urlPlant = "MOSENERG_46_calcfacthour";
+        if(plant.equals("Bor")) urlPlant = "NIGNOVEN_22_calcfacthour";
 
         for(int i = startPeriod; i<endPerid+1; i++) {
-            //                          toDo сделать нумерацию по месяцам с нулем (!= 012)
-            url = "https://www.atsenergo.ru/dload/calcfacthour_regions/20250"+ i + urlPlant + ".xls";
+            // Метод NumberUtils.format(i) нужен для перевода числа в формат 01, 02, 03 и т.д
+            var monthStart = NumberUtils.format(i);
+
+            //    "https://www.atsenergo.ru/dload/calcfacthour_regions/20250"+ i + urlPlant + ".xls"
+            url = String.format("https://www.atsenergo.ru/dload/calcfacthour_regions/%s%s_%s.xls", year, monthStart, urlPlant);
             byte[] xlsBytes = restTemplate_SSL_OFF.getForObject(url, byte[].class);
 
             try {
-                Files.write(Paths.get(filePath +"/20250"+ i +"_"+ plant +"_peaks.xls"), xlsBytes);
+                var path = String.format(filePath +"/%s%s_%s_peaks.xls", year, monthStart, plant);
+                Files.write(Paths.get(path), xlsBytes);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -136,15 +140,20 @@ public class ExcelDocument {
         File filePath = new File("c:/EnergyReports/"+ plant +"/downloads/priceHour");
         filePath.mkdirs();
 
-        if(plant.equals("Klin")) urlPlant = "10_MOSENERG_PMOSENER_0";
-        if(plant.equals("Bor")) urlPlant = "10_NIGNOVEN_PNIGNOVE_0";
-        for(int i = startPeriod; i<endPerid+1; i++) {
-            //                          toDo сделать нумерацию по месяцам с нулем (!= 012)
-            url = "https://www.atsenergo.ru/dload/retail/20250"+i+"01/20250"+ (i+1) + urlPlant + i +"2025_gtp_1st_stage.xls";
+        if(plant.equals("Klin")) urlPlant = "MOSENERG_PMOSENER";
+        if(plant.equals("Bor")) urlPlant = "NIGNOVEN_PNIGNOVE";
+        for(int i = startPeriod; i < endPerid + 1; i++) {
+            // Метод NumberUtils.format(i) нужен для перевода числа в формат 01, 02, 03 и т.д
+            var monthStart = NumberUtils.format(i);
+            var monthEnd = NumberUtils.format(i+1);
+
+                               //https://www.atsenergo.ru/dload/retail/20250801/20250910_MOSENERG_PMOSENER_082025_gtp_1st_stage.xls
+            url = String.format("https://www.atsenergo.ru/dload/retail/%s%s01/%s%s10_%s_%s%s_gtp_1st_stage.xls", year, monthStart, year, monthEnd, urlPlant, monthStart, year);
             byte[] xlsBytes = restTemplate_SSL_OFF.getForObject(url, byte[].class);
 
             try {
-                Files.write(Paths.get(filePath +"/20250"+ i +"_"+ plant +"_priceHour.xls"), xlsBytes);
+                var path = String.format(filePath + "/%s%s_%s_priceHour.xls", year, monthStart, plant);
+                Files.write(Paths.get(path), xlsBytes);
             } catch (IOException e) {
                 e.printStackTrace();
             }

@@ -1,7 +1,6 @@
 package com.denidove.Energy.services;
 
 import com.denidove.Energy.dto.DocumentDto;
-import com.denidove.Energy.entities.TransPeaks;
 import com.denidove.Energy.utils.CalendarOrder;
 import org.apache.poi.xssf.usermodel.XSSFFormulaEvaluator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,12 +24,13 @@ public class MatrixService extends ExcelDocument {
     @Autowired
     private TransPeakService transPeakService;
 
+    // Заполнение часовых объемов в матричную форму
     public void inputConsumptionValues() {
         plant = excelDocument.getPlant();
-        xlsx = openXlsx("c:/EnergyReports/templates/"+ plant +" prices_aux.xlsx");
+        var path = String.format("c:/EnergyReports/templates/%s prices_aux.xlsx", plant);
+        xlsx = openXlsx(path);
 
         var hourVolumes = documentDto.getHourVolumes();
-
         int k = 0;
         for(int j = 0; j < dayCalendar.length; j++) {
             for(int i = 0; i < 24; i++) {
@@ -40,20 +40,17 @@ public class MatrixService extends ExcelDocument {
         }
     }
 
-    // Заполнение итоговой суммы по электроэнергии (без скидки) за месяц в отчетный файл
+    // Заполнение итоговой суммы по электроэнергии за месяц в отчетный файл
     public void inputElecPrice() {
         var elecPriceMonth_3pc = documentDto.getElecPriceMonth_3pc();
         var elecPriceMonth_4pc = documentDto.getElecPriceMonth_4pc();
         xlsx.getSheetAt(0).getRow(6).getCell(31).setCellValue(elecPriceMonth_4pc);
         xlsx.getSheetAt(0).getRow(28).getCell(31).setCellValue(elecPriceMonth_3pc);
-    }
-
-    // Заполнение итоговой суммы по электроэнергии (со скидкой) за месяц в отчетный файл
-    public void inputElecPrice_discount() {
-        var elecPriceMonth_3pc = documentDto.getElecPriceMonth_3pc_discount();
-        var elecPriceMonth_4pc = documentDto.getElecPriceMonth_4pc_discount();
-        xlsx.getSheetAt(0).getRow(6).getCell(34).setCellValue(elecPriceMonth_4pc);
-        xlsx.getSheetAt(0).getRow(28).getCell(34).setCellValue(elecPriceMonth_3pc);
+    // Заполнение итоговой суммы по электроэнергии (со скидкой) за месяц в отчетный файл:
+        var elecPriceMonth_3pc_discount = documentDto.getElecPriceMonth_3pc_discount();
+        var elecPriceMonth_4pc_discount = documentDto.getElecPriceMonth_4pc_discount();
+        xlsx.getSheetAt(0).getRow(6).getCell(34).setCellValue(elecPriceMonth_4pc_discount);
+        xlsx.getSheetAt(0).getRow(28).getCell(34).setCellValue(elecPriceMonth_3pc_discount);
     }
 
     // Заполнение цены сетевой мощности в отчетный файл
@@ -74,14 +71,13 @@ public class MatrixService extends ExcelDocument {
         xlsx.getSheetAt(0).getRow(13).getCell(38).setCellValue(powerTransPrice * 1000);
     }
 
-    //toDo Разобрать алгоритм и провести оптимизацию кода
     // Расчет мощности оптового рынка
     public void inputCapacityOptVol(int period) {
         var hourVolumes = documentDto.getHourVolumes();
         double[] pikHours = new double[31];
         double[] dayPik = new double[31];
-        xls = open("c:/EnergyReports/"+ plant +"/downloads/pikHour/20250"+ period +"_"+ plant +"_peaks.xls");
-
+        var path = String.format("c:/EnergyReports/%s/downloads/pikHour/20250%s_%s_peaks.xls", plant, period, plant);
+        xls = open(path);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.LL.yyyy");
 
         // Парсинг данных часов пиковой нагрузки из xls файла
@@ -101,12 +97,14 @@ public class MatrixService extends ExcelDocument {
         }
 
         // в цикле возвращаются максимальные пики оптовой мощности
-        int k = 0; //toDo комментарии для - чего эта переменная
-        int j = 0; //toDo комментарии для - чего эта переменная
+        int k = 0; // Переменная k производит увеличение индекса массива workingDayIndex, для
+        int j = 0; // j это коэффициент, который увеличивает индексы массива hourVolumes на 24,
+                   // то есть происходит переход на "новую строку" в массиве.
         for(int i = 0; i < dayCalendar.length; i++) {
+            // В каждой итерации i сверяется с индксом рабочего дня (то есть с календарными числами рабочих дней) за вычетом единицы (для приведения соответствия к нумерации массива)
             if(i == workingDayIndex[k]-1) {
-                //toDo разобрать строчку ниже, написать объяснение:
-                dayPik[i] = hourVolumes[j + (int)pikHours[i] -1];
+                // Переменная j производит переход на "новую строку" в массиве hourVolumes.
+                dayPik[i] = hourVolumes[j + (int)pikHours[i] - 1];
                 // Внесение часов пиковой нагрузки в отчетный файл
                 xlsx.getSheetAt(0).getRow(2 + i).getCell(28).setCellValue(dayPik[i]);
                 k++;
@@ -124,26 +122,23 @@ public class MatrixService extends ExcelDocument {
     //toDo Разобрать алгоритм и провести оптимизацию кода
     // Расчет сетевой мощности (передача электроэнергии)
     public void inputCapacityTransVol(int month) {
-
         var peaks = transPeakService.getPeaks();
         // сортировка нужна, чтобы упорядочить объекты в календарном порядке, иначе может получитья чехорда
         peaks.sort(new CalendarOrder());
 
-
         // Интервалы определения максимальной мощности. (- 1) переводной коэффициент для корректной нумерации массива
         //toDo написать пояснения по поводцу индексов inclusive | exclusive
-        //toDo также сделать базу данных для занесения тарифов и всех ценовых параметров (таких как интервалы)
         int intervalA_start = peaks.get(month - 1).getFirstHourStart() - (1);
         int intervalA_end = peaks.get(month - 1).getFirstHourEnd();
         int intervalB_start = peaks.get(month - 1).getSecondHourStart() - (1);
         int intervalB_end = peaks.get(month - 1).getSecondHourEnd();
-        String test = peaks.get(month - 1).getMonth();
 
         var hourVolumes = documentDto.getHourVolumes();
         double[] dayPik = new double[31];
-        int j = 0; //toDo комментарии для - чего эта переменная
-        int k = 0; //toDo комментарии для - чего эта переменная
-        // в цикле вычисляются максимальные пики сетевой мощности
+        int k = 0; // Переменная k производит увеличение индекса массива workingDayIndex, для
+        int j = 0; // j это коэффициент, который увеличивает индексы массива hourVolumes на 24,
+                   // то есть происходит переход на "новую строку" в массиве.
+        // В цикле вычисляются максимальные пики сетевой мощности
         for(int i = 0; i < dayCalendar.length; i++) {
             if(i == workingDayIndex[k]-1) {
                 var maxValueA = Arrays.stream(hourVolumes, j + intervalA_start, j + intervalA_end).max().getAsDouble();
@@ -158,18 +153,17 @@ public class MatrixService extends ExcelDocument {
             System.out.println(dayPik[i]);
             j += 24;
         }
-
         capacityTransVol = Arrays.stream(dayPik).sum() / workingDays;
         documentDto.setCapacityTransVol(capacityTransVol);
         xlsx.getSheetAt(0).getRow(33).getCell(27).setCellValue(capacityTransVol);
     }
 
     //  Выгрузка отчетного файла на жесткий диск
-    //toDo
-    public void save(int i) {
+    public void save(int period) {
         // Метод заставляет пересчитаться формулы при следующем открытии файла
         XSSFFormulaEvaluator.evaluateAllFormulaCells(xlsx);
-        try (FileOutputStream output = new FileOutputStream("c:/EnergyReports/"+i+"_"+ plant +"_matrixReport.xlsx")) { // try-with-resources
+        var path = String.format("c:/EnergyReports/%s_%s_matrixReport.xlsx", period, plant);
+        try (FileOutputStream output = new FileOutputStream(path)) { // try-with-resources
             xlsx.write(output);
         } catch (IOException e) {
             e.printStackTrace();

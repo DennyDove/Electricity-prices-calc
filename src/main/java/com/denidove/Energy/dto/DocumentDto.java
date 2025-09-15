@@ -21,6 +21,7 @@ public class DocumentDto {
 
     private Month startPeriod;
     private Month endPeriod;
+    private int year;
 
     private List<TransPiksDto> transPiksDtoList;
 
