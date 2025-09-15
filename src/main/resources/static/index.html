@@ -40,13 +40,17 @@
           <label for="Bor">Бор</label>
         </div>
         <br>
-        <label for="discount">Cкидка от сбытовой надбавки: </label>
+        <label for="discount">Cкидка от сбытовой надбавки, %: </label>
         <input type="number" id="discount" th:field="*{discount}" th:value="*{discount}"></input>
         <br>
         <br>
         <label for="monthList">Начальный месяц:</label>
         <select id="monthList" th:field="*{startPeriod}">
           <option th:each="m : ${months}" th:value="${m}" th:text="${m.name}"></option>
+        </select>
+        <label for="year">Год:</label>
+        <select id="year" th:field="*{year}">
+          <option th:each="y : ${years}" th:value="${y}" th:text="${y}"></option>
         </select>
         <br>
         <br>

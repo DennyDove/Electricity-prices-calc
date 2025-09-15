@@ -1,6 +1,7 @@
 package com.denidove.Energy.services;
 
 import com.denidove.Energy.dto.DocumentDto;
+import com.denidove.Energy.utils.NumberUtils;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -72,12 +73,16 @@ public class ElecService extends ExcelDocument {
         double[] hourElecSums_4pc = new double[744];
         double[] hourElecSums_3pc_discount = new double[744];
         double[] hourElecSums_4pc_discount = new double[744];
-        xls = open("c:/EnergyReports/"+plant+"/downloads/priceHour/20250" + period + "_"+plant+"_priceHour.xls");
+        year = excelDocument.getYear();
 
+        var path = String.format("c:/EnergyReports/%s/downloads/priceHour/%s%s_%s_priceHour.xls", plant, year, NumberUtils.format(period), plant);
+        xls = open(path);
 
-
+        //powerOptPrice = xls.getSheetAt(0).getRow(31).getCell(1).getNumericCellValue();
         // получение средневзвешенной цены мощности на оптовом рынке          // используем метод getStringCellValue() т.к. значение в ячейке определяется как String
         powerOptPrice = Double.parseDouble(xls.getSheetAt(0).getRow(31).getCell(1).getStringCellValue().replace(",", "."));
+
+        //serviceRegimeFee = xls.getSheetAt(0).getRow(34).getCell(1).getNumericCellValue();
         // получение цены за услугу по управлению изменением режима потребления электроэнерии
         serviceRegimeFee = Double.parseDouble(xls.getSheetAt(0).getRow(34).getCell(1).getStringCellValue().replace(",", "."));
 

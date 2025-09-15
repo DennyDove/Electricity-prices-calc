@@ -44,6 +44,10 @@
         <select id="monthList" th:field="*{startPeriod}">
           <option th:each="m : ${months}" th:value="${m}" th:text="${m.name}"></option>
         </select>
+        <label for="year">Год:</label>
+        <select id="year" th:field="*{year}">
+          <option th:each="y : ${years}" th:value="${y}" th:text="${y}"></option>
+        </select>
         <br>
         <br>
         <label for="monthList">Конечный месяц:</label>
