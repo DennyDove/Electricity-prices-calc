@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.xml.transform.Source;
 import java.util.List;
 
 @Controller
@@ -52,7 +53,14 @@ public class DataController {
                 piksList.add(p);
             }
         }
-        piksList.sort(new CalendarOrder());
+
+        //toDo - done: Нужна обработка try-catch, т.к. при первом запуске программы всегда выскакивает NPE
+        try {
+            piksList.sort(new CalendarOrder());
+        } catch (NullPointerException e) {
+            System.out.println("Словили NPE :)");
+        }
+
 
         var components = transPeakService.getComponents();
         if(components.isEmpty())

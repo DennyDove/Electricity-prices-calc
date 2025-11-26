@@ -57,10 +57,11 @@ spring:
 
   datasource:
     driverClassName: com.mysql.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/enterprise
+    url: jdbc:mysql://localhost:3306/energy1
     username: root
     password: root
   jpa:
+    defer-datasource-initialization: true # выполнение скрипта data.sql после создания таблицы
     show-sql: true
     properties:
       hibernate:

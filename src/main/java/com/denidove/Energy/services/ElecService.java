@@ -31,11 +31,14 @@ public class ElecService extends ExcelDocument {
     public double inputConsumptionValues(int period) {
         plant = excelDocument.getPlant();
         double monthSum = 0;
-        xls = open("c:/EnergyReports/"+plant+"/downloads/Часовки ВН_0" + period + ".xls");
+        // Открываем файл по относительному к JAR-файлу пути
+        xls = open(plant+"/downloads/Часовки ВН_" + period + ".xls");
+        //xls = open("c:/EnergyReports/"+plant+"/downloads/Часовки ВН_" + period + ".xls");
         if (period <= 6)
-            xlsx = openXlsx("c:/EnergyReports/templates/1h_"+plant+"_elec.xlsx");
+            // Открываем файл именно как openResourceAsStream
+            xlsx = openXlsxAsStream("/templates/1h_"+plant+"_elec.xlsx");
         else
-            xlsx = openXlsx("c:/EnergyReports/templates/2h_"+plant+"_elec.xlsx");
+            xlsx = openXlsxAsStream("/templates/2h_"+plant+"_elec.xlsx");
 
         // Загружаем часовые объемы
         if(plant.equals("Klin")) {
@@ -75,7 +78,7 @@ public class ElecService extends ExcelDocument {
         double[] hourElecSums_4pc_discount = new double[744];
         year = excelDocument.getYear();
 
-        var path = String.format("c:/EnergyReports/%s/downloads/priceHour/%s%s_%s_priceHour.xls", plant, year, NumberUtils.format(period), plant);
+        var path = String.format("/%s/downloads/priceHour/%s%s_%s_priceHour.xls", plant, year, NumberUtils.format(period), plant);
         xls = open(path);
 
         //powerOptPrice = xls.getSheetAt(0).getRow(31).getCell(1).getNumericCellValue();

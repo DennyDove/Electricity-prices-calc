@@ -1,6 +1,7 @@
 package com.denidove.Energy.services;
 
 import com.denidove.Energy.dto.DocumentDto;
+import com.denidove.Energy.utils.NIO;
 import com.denidove.Energy.utils.NumberUtils;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,10 +10,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFFormulaEvaluator;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
@@ -61,7 +59,12 @@ public class ExcelDocument {
     protected double discount;
 
     public HSSFWorkbook open(String xlsDoc)  {
-        try (FileInputStream is = new FileInputStream(xlsDoc)) { // try-with-resources
+
+        // Определяем папку, в которой лежит JAR-файл
+        File jarDir = NIO.getAppDirectory();
+        File file = new File(jarDir, xlsDoc);
+
+        try (FileInputStream is = new FileInputStream(file)) { // try-with-resources
             xls = new HSSFWorkbook(is);
         } catch (IOException e) {
             e.printStackTrace();
@@ -69,9 +72,30 @@ public class ExcelDocument {
         return xls;
     }
 
+    // Данный вариант метода нужен для корректной загрузки excel-шаблонов из JAR файла
+    public HSSFWorkbook openXlsAsStream(String xlsDoc)  {
+        try (InputStream inputStream = ExcelDocument.class.getResourceAsStream(xlsDoc)) { // try-with-resources
+            xls = new HSSFWorkbook(inputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return xls;
+    }
+
+
     public XSSFWorkbook openXlsx(String xlsxDoc)  {
         try (FileInputStream is = new FileInputStream(xlsxDoc)) { // try-with-resources
             xlsx = new XSSFWorkbook(is);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return xlsx;
+    }
+
+    // Данный вариант метода нужен для корректной загрузки excel-шаблонов из JAR файла
+    public XSSFWorkbook openXlsxAsStream(String xlsxDoc)  {
+        try (InputStream inputStream = ExcelDocument.class.getResourceAsStream(xlsxDoc)) { // try-with-resources
+            xlsx = new XSSFWorkbook(inputStream);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -99,9 +123,12 @@ public class ExcelDocument {
         }
         RestTemplate restTemplate_SSL_OFF = new RestTemplate(factory);
 
+        // Определяем папку, в которой лежит JAR-файл
+        File jarDir = NIO.getAppDirectory();
+
         String url = "";
         String urlPlant = "";
-        File filePath = new File("c:/EnergyReports/"+ plant +"/downloads/pikHour");
+        File filePath = new File(jarDir, plant +"/downloads/pikHour");
         filePath.mkdirs();
 
         if(plant.equals("Klin")) urlPlant = "MOSENERG_46_calcfacthour";
@@ -135,11 +162,13 @@ public class ExcelDocument {
         }
         RestTemplate restTemplate_SSL_OFF = new RestTemplate(factory);
 
+        // Определяем папку, в которой лежит JAR-файл
+        File jarDir = NIO.getAppDirectory();
+
         String url ="";
         String urlPlant = "";
-        File filePath = new File("c:/EnergyReports/"+ plant +"/downloads/priceHour");
+        File filePath = new File(jarDir, plant +"/downloads/priceHour");
         filePath.mkdirs();
-
         if(plant.equals("Klin")) urlPlant = "MOSENERG_PMOSENER";
         if(plant.equals("Bor")) urlPlant = "NIGNOVEN_PNIGNOVE";
         for(int i = startPeriod; i < endPerid + 1; i++) {
